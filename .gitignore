@@ -1,0 +1,7 @@
+/backend/__pycache__
+/backend/venv
+/backend/models/__pycache__
+/backend/routes/__pycache__
+/backend/schemas/__pycache__
+.env
+/backend/core/__pycache__
