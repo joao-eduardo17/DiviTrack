@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, Response, status, Depends
 from schemas.user import UserCreate, UserOut, UserPatch
+from core.dependencies import get_current_user
 from models.models import Users
 import bcrypt
 
@@ -11,6 +12,9 @@ async def get_users():
     users = await Users.all()
     return users
 
+@router.get("/me")
+async def get_logged_user(current_user: Users = Depends(get_current_user)):
+    return {"id": current_user.id, "email": current_user.email}
 
 @router.post("/", response_model=UserOut)
 async def post_user(user: UserCreate):
@@ -26,9 +30,11 @@ async def post_user(user: UserCreate):
 
     return new_user
 
-
 @router.patch("/{user_id}", response_model=UserOut)
-async def patch_user(user_id: int, data: UserPatch):
+async def patch_user(user_id: int, data: UserPatch, current_user: Users = Depends(get_current_user)):
+    if user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    
     existing_user = await Users.get_or_none(id=user_id)
     if not existing_user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
@@ -44,9 +50,11 @@ async def patch_user(user_id: int, data: UserPatch):
 
     return existing_user
 
-
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(user_id: int):
+async def delete_user(user_id: int, current_user: Users = Depends(get_current_user)):
+    if user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    
     user = await Users.get_or_none(id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")

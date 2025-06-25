@@ -7,13 +7,14 @@ class Users(Model):
     name = fields.CharField(max_length=255)
     email = fields.CharField(max_length=255, unique=True)
     password = fields.CharField(max_length=255)
-    fiis: fields.ReverseRelation["Fii"]  # user.fiis.all() access all Fiis linked in the user
+    fiis: fields.ReverseRelation["Fiis"]  # user.fiis.all() access all Fiis linked in the user
 
 
-class Fii(Model):
+class Fiis(Model):
     id = fields.IntField(primary_key=True)
     code = fields.CharField(max_length=7)
     price = fields.FloatField()
     dividend = fields.FloatField()
+    quantity = fields.IntField(null=True)
     user = fields.ForeignKeyField("models.Users", related_name="fiis", on_delete=fields.CASCADE)
     
