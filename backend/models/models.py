@@ -7,7 +7,7 @@ class Users(Model):
     name = fields.CharField(max_length=255)
     email = fields.CharField(max_length=255, unique=True)
     password = fields.CharField(max_length=255)
-    fiis: fields.ReverseRelation["Fiis"]  # user.fiis.all() access all Fiis linked in the user
+    # fiis: fields.ReverseRelation["Fiis"]  # user.fiis.all() access all Fiis linked in the user
 
 
 class Fiis(Model):
