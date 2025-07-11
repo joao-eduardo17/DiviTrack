@@ -1,15 +1,16 @@
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi.middleware.cors import CORSMiddleware
-from routes import user, fii, auth 
+from routes import user, fii, auth, wallet
 from dotenv import load_dotenv
 from fastapi import FastAPI
 import os
 
 
 app = FastAPI()
-app.include_router(user.router, prefix="/users")
-app.include_router(fii.router, prefix="/fiis")
-app.include_router(auth.router, prefix="/auth")
+app.include_router(user.router, prefix="/users", tags=["Users"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(fii.router, prefix="/fiis", tags=["FIIs"])
+app.include_router(wallet.router, prefix="/wallet", tags=["Wallet"])
 
 load_dotenv()
 

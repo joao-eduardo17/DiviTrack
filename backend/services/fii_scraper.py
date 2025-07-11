@@ -14,8 +14,12 @@ class FiiScraper:
         soup = BeautifulSoup(response.text, "lxml")
 
         price_div = soup.find("div", class_="headerTicker__content__price")
-        brute_price = price_div.find("p").text.strip()
-        regex_value = re.search(r"[\d.,]+", brute_price)
+
+        if price_div:
+            brute_price = price_div.find("p").text.strip()
+            regex_value = re.search(r"[\d.,]+", brute_price)
+        else:
+            return None
 
         if regex_value:
             value = regex_value.group(0).replace(",", ".")
@@ -29,8 +33,12 @@ class FiiScraper:
         soup = BeautifulSoup(response.text, "lxml")
 
         indicators = soup.find_all("div", class_="indicators__box")
-        paragraphs = indicators[1].find_all("p")
-        brute_price = paragraphs[1].find("b").text.strip()
+
+        if indicators:
+            paragraphs = indicators[1].find_all("p")
+            brute_price = paragraphs[1].find("b").text.strip()
+        else:
+            return None
 
         regex_value = re.search(r"[\d.,]+", brute_price)
 

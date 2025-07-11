@@ -16,12 +16,12 @@ class Fiis(Model):
     dividend = fields.FloatField()
 
 
-class UserFiis(Model):
+class Wallets(Model):
     id = fields.IntField(primary_key=True)
-    fii = fields.ForeignKeyField("models.Fiis", related_name="user_fiis")
-    user = fields.ForeignKeyField("models.Users", related_name="user_fiis", on_delete=fields.CASCADE)
+    fii = fields.ForeignKeyField("models.Fiis", related_name="wallets")
+    user = fields.ForeignKeyField("models.Users", related_name="wallets", on_delete=fields.CASCADE)
     quantity = fields.IntField()
 
     class Meta:
-        table = "user_fiis"
+        table = "wallets"
         unique_together = ("user", "fii") 

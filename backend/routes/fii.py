@@ -16,13 +16,20 @@ async def get_fiis():
 
 @router.post("/", response_model=FiiOut)
 async def post_fiis(payload: FiiCreate, current_user=Depends(get_current_user)):
+    verify_code = await Fiis.get_or_none(code=payload.code)
+    if verify_code:
+        raise HTTPException(status_code=409, detail="O código do FII informado já existe")
+    
     try:
         scraper = FiiScraper(payload.code)
         price = await scraper.get_price()
         dividend = await scraper.get_dividend()
 
+        if not price or not dividend:
+            raise HTTPException(status_code=422, detail="Não foi possível obter os dados do FII informado. Verifique o código e tente novamente")
+
         new_fii = await Fiis.create(
-            code=payload.code,
+            code=payload.code.upper(),
             price=price,
             dividend=dividend,
         )
