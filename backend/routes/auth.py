@@ -8,7 +8,7 @@ import bcrypt
 
 router = APIRouter()
 
-@router.post("/", response_model=UserOut)
+@router.post("/register", response_model=UserOut)
 async def post_user(user: RegisterSchema):
     existing_user = await Users.get_or_none(email=user.email)
     if existing_user:
