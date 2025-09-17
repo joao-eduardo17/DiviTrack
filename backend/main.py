@@ -24,7 +24,7 @@ app.add_middleware(
 
 register_tortoise(
     app,
-    db_url=os.getenv("DATABASE_URL"),  # URL of where database are
+    db_url="postgres://postgres:1234@database:5432/diviTrack",  # URL of where database are
     modules={"models": ["models.models"]},  # path where the models are
     generate_schemas=True,  # false on deploy
     add_exception_handlers=True,
